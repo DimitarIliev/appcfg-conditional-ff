@@ -14,10 +14,6 @@ namespace ConditionalFeatureFlags.Pages
 
         public void OnGet()
         {
-            Response.Cookies.Append("Tenant", "TenantB", new CookieOptions
-            {
-                Expires = DateTimeOffset.UtcNow.AddDays(1),
-            });
         }
 
     }
