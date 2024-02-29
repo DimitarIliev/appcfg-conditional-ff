@@ -13,16 +13,12 @@ namespace ConditionalFeatureFlags.Infrastructure
 
         public Task<bool> EvaluateAsync(FeatureFilterEvaluationContext context)
         {
-            var isLoggedIn = true;
+            // Get the ClaimsFilterSettings from configuration
+            var settings = context.Parameters.Get<TenantSettings>();
 
-            bool isEnabled = false;
+            var userTenant = "TenantA";
 
-            if (isLoggedIn)
-            {
-                // check tenant
-            }
-            else
-                isEnabled = true;
+            var isEnabled = settings.AllowedTenants.Any(tenant => userTenant.Equals(tenant));
 
             return Task.FromResult(isEnabled);
         }
