@@ -13,12 +13,28 @@ namespace ConditionalFeatureFlags.Infrastructure
 
         public Task<bool> EvaluateAsync(FeatureFilterEvaluationContext context)
         {
-            // Get the ClaimsFilterSettings from configuration
             var settings = context.Parameters.Get<TenantSettings>();
 
             var userTenant = "TenantA";
 
             var isEnabled = settings.AllowedTenants.Any(tenant => userTenant.Equals(tenant));
+
+            return Task.FromResult(isEnabled);
+        }
+    }
+
+    [FilterAlias("OmegaFilter")]
+    public class OmegaFilter : IContextualFeatureFilter<MyApplicaionContext>
+    {
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public OmegaFilter(IHttpContextAccessor httpContextAccessor)
+        {
+            _httpContextAccessor = httpContextAccessor;
+        }
+
+        public Task<bool> EvaluateAsync(FeatureFilterEvaluationContext context, MyApplicaionContext myApplicaionContext)
+        {            
+            var isEnabled = myApplicaionContext.BranchNumber.Equals("123");
 
             return Task.FromResult(isEnabled);
         }

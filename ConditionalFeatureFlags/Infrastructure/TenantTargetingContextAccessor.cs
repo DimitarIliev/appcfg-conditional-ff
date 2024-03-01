@@ -12,6 +12,7 @@ namespace ConditionalFeatureFlags.Infrastructure
             _httpContextAccessor = httpContextAccessor ?? throw new ArgumentNullException(nameof(httpContextAccessor));
         }
 
+
         public ValueTask<TargetingContext> GetContextAsync()
         {
             HttpContext httpContext = _httpContextAccessor.HttpContext;
@@ -21,20 +22,20 @@ namespace ConditionalFeatureFlags.Infrastructure
                 return new ValueTask<TargetingContext>((TargetingContext)value);
             }
 
-            string tenant = _httpContextAccessor.HttpContext.Request.Cookies["Tenant"];
-
             List<string> groups = new List<string>();
 
-            groups.Add(tenant);
+            if (httpContext.User.Identity.Name != null)
+            {
+                groups.Add(httpContext.User.Identity.Name.Split("@", StringSplitOptions.None)[1]);
+            }
 
             TargetingContext targetingContext = new TargetingContext
             {
-                UserId = tenant,
+                UserId = httpContext.User.Identity.Name,
                 Groups = groups
             };
 
             httpContext.Items[TargetingContextLookup] = targetingContext;
-
             return new ValueTask<TargetingContext>(targetingContext);
         }
     }
