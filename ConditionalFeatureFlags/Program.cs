@@ -26,8 +26,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddAzureAppConfiguration();
 builder.Services.AddFeatureManagement()
     //.AddFeatureFilter<TargetingFilter>();
-    .AddFeatureFilter<TenantFilter>()
-    .AddFeatureFilter<OmegaFilter>();
+    .AddFeatureFilter<DashboardFilter>()
+    .AddFeatureFilter<DashboardAdminFilter>();
+
 // Add targeting filter
 builder.Services.AddSingleton<ITargetingContextAccessor, TenantTargetingContextAccessor>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
